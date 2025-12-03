@@ -39,6 +39,7 @@
     const zoomButton = document.querySelector(".zoom-button");
     let zoomed = false;
     const imageSelector = document.querySelector(".image-selector");
+    let scaleFactor = 0.5;
 
     function setImage(imageName) {
       imgtag.src = "./imgs/" + imageName;
@@ -72,6 +73,8 @@
         phone_position.top < normalizedPos.y &&
         normalizedPos.y < phone_position.bottom;
 
+      console.log({ isPhone });
+
       markSize = imgtag.offsetWidth * 0.02;
       mark.style.width = markSize + "px";
       mark.style.height = markSize + "px";
@@ -82,9 +85,6 @@
 
     imageContainer.addEventListener("mousemove", (event) => {
       const target = event.target;
-      if (!imgtag.classList.contains("zoomed")) {
-        return;
-      }
 
       imageContainerSize = imageContainer.getBoundingClientRect();
 
@@ -105,14 +105,46 @@
     });
 
     zoomButton.addEventListener("click", (event) => {
-      zoomed = !zoomed;
-      if (zoomed) {
-        imgtag.classList.add("zoomed");
-      } else {
-        imgtag.classList.remove("zoomed");
-      }
+      scaleFactor = Math.min(1, scaleFactor + 0.1);
+
+      const naturalWidth = imgtag.naturalWidth;
+      const naturalHeight = imgtag.naturalHeight;
+
+      imgtag.style.width = naturalWidth * scaleFactor + "px";
+      imgtag.style.height = naturalHeight * scaleFactor + "px";
 
       mark.classList.add("hidden");
+    });
+
+    function scaleIn() {
+      scaleFactor = Math.min(scaleFactor + 0.1, 1);
+      updateZoom();
+    }
+
+    function scaleOut() {
+      scaleFactor = Math.max(
+        scaleFactor - 0.1,
+        imageContainer.clientWidth / imgtag.naturalWidth
+      );
+      updateZoom();
+    }
+
+    function updateZoom() {
+      const naturalWidth = imgtag.naturalWidth;
+      const naturalHeight = imgtag.naturalHeight;
+
+      imgtag.style.width = naturalWidth * scaleFactor + "px";
+      imgtag.style.height = naturalHeight * scaleFactor + "px";
+
+      mark.classList.add("hidden");
+    }
+
+    imageContainer.addEventListener("wheel", (event) => {
+      if (event.deltaY < 0) {
+        scaleIn();
+      } else {
+        scaleOut();
+      }
     });
   </script>
   <style>
@@ -132,7 +164,7 @@
 
     .image-container {
       position: relative;
-      max-width: 100%;
+      width: 100%;
       max-height: 90vh;
       border: 2px solid red;
       overflow: auto;
@@ -166,15 +198,15 @@
     }
 
     .image-container img {
-      max-width: inherit;
-      max-height: inherit;
+      width: inherit;
+      height: inherit;
       object-fit: cover;
       display: block;
     }
 
     .image-container img.zoomed {
-      max-width: unset;
-      max-height: unset;
+      width: unset;
+      height: unset;
     }
   </style>
 </html>
