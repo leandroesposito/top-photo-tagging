@@ -118,12 +118,12 @@ function handleGameClick(event) {
     objective.left = normalizedPos.x;
   }
 
-  const markSize = imgtag.offsetWidth * 0.02;
-  mark.style.width = markSize + "px";
-  mark.style.height = markSize + "px";
-  mark.style.left = event.offsetX - markSize / 2 + "px";
-  mark.style.top = event.offsetY - markSize / 2 + "px";
-  mark.classList.remove("hidden");
+  const markerSize = imgtag.offsetWidth * 0.02;
+  marker.style.width = markerSize + "px";
+  marker.style.height = markerSize + "px";
+  marker.style.left = event.offsetX - markerSize / 2 + "px";
+  marker.style.top = event.offsetY - markerSize / 2 + "px";
+  marker.classList.remove("hidden");
 }
 
 function handleGameHover(event) {
@@ -154,7 +154,7 @@ function updateZoom() {
   imgtag.style.width = naturalWidth * scaleFactor + "px";
   imgtag.style.height = naturalHeight * scaleFactor + "px";
 
-  mark.classList.add("hidden");
+  marker.classList.add("hidden");
 }
 
 function scaleIn() {
@@ -181,7 +181,7 @@ function handleGameWheel(event) {
 
 const imgtag = document.querySelector("img");
 const imageContainer = document.querySelector(".image-container");
-const mark = document.querySelector(".mark");
+const marker = document.querySelector(".marker");
 let scaleFactor = 0.5;
 
 imageContainer.addEventListener("wheel", handleGameHover);

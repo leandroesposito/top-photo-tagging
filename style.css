@@ -71,7 +71,7 @@ body {
   overflow: auto;
 }
 
-.mark {
+.marker {
   position: absolute;
   width: 2rem;
   height: 2rem;
