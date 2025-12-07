@@ -56,7 +56,9 @@ async function initGame(gameId) {
     objectivesContainer.appendChild(objectiveElement);
   }
 
-  setImage(gameData.pictureFilename);
+  scaleFactor = 0;
+  setImage(currentGame.pictureFilename);
+  updateZoom();
 }
 
 function createObjectiveElement(objective) {
@@ -151,22 +153,36 @@ function updateZoom() {
   const naturalWidth = imgtag.naturalWidth;
   const naturalHeight = imgtag.naturalHeight;
 
-  imgtag.style.width = naturalWidth * scaleFactor + "px";
-  imgtag.style.height = naturalHeight * scaleFactor + "px";
+  if (naturalWidth === 0 || scaleFactor === 0) {
+    imgtag.style.width = "100%";
+  } else {
+    imgtag.style.width = naturalWidth * scaleFactor + "px";
+    imgtag.style.height = naturalHeight * scaleFactor + "px";
+  }
 
   marker.classList.add("hidden");
 }
 
 function scaleIn() {
-  scaleFactor = Math.min(scaleFactor + 0.1, 2);
+  const clientWidth = imageContainer.clientWidth;
+  const naturalWidth = imgtag.naturalWidth;
+  scaleFactor = Math.min(
+    Math.max(clientWidth / naturalWidth + 0.1, scaleFactor + 0.1),
+    2
+  );
   updateZoom();
 }
 
 function scaleOut() {
-  scaleFactor = Math.max(
-    scaleFactor - 0.1,
-    imageContainer.clientWidth / imgtag.naturalWidth
-  );
+  const clientWidth = imageContainer.clientWidth;
+  const naturalWidth = imgtag.naturalWidth;
+
+  if (naturalWidth === 0) {
+    scaleFactor = 0;
+  } else {
+    scaleFactor = Math.max(scaleFactor - 0.1, clientWidth / naturalWidth);
+  }
+
   updateZoom();
 }
 
