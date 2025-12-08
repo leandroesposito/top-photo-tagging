@@ -209,3 +209,44 @@ imageContainer.addEventListener("mousemove", handleGameHover);
 imageContainer.addEventListener("wheel", handleGameWheel);
 
 await initSite();
+
+function removeObjectives() {
+  const objectives = document.querySelectorAll(".target-box");
+  objectives.forEach((o) => {
+    o.remove();
+  });
+}
+
+async function showObjectives() {
+  removeObjectives();
+  const objectives = await api.getObjectivesLocation(currentGame.id);
+
+  for (const id in objectives) {
+    const objective = objectives[id];
+    if (!objective.name) continue;
+
+    const targetBox = document.createElement("div");
+    const width = imgtag.clientWidth;
+    const height = imgtag.clientHeight;
+
+    targetBox.dataset.name = objective.name;
+
+    targetBox.style.left = objective.left * width + "px";
+    targetBox.style.top = objective.top * height + "px";
+    targetBox.style.width = (objective.right - objective.left) * width + "px";
+    targetBox.style.height = (objective.bottom - objective.top) * height + "px";
+
+    targetBox.style.position = "absolute";
+    targetBox.style.border = "2px solid red";
+    targetBox.style.boxShadow = "0 0 5px lime, 0 0 5px lime inset";
+
+    targetBox.style.animationName = "breath";
+    targetBox.style.animationDuration = "2s";
+    targetBox.style.animationTimingFunction = "ease-in-out";
+    targetBox.style.animationIterationCount = "infinite";
+
+    targetBox.classList.add("target-box");
+
+    imageContainer.appendChild(targetBox);
+  }
+}

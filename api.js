@@ -15,6 +15,10 @@ async function getGameObjectives(gameId) {
   return data;
 }
 
+async function getObjectivesLocation(gameId) {
+  return gamesData[gameId].objectives;
+}
+
 async function getGameData(gameId) {
   const game = gamesData[gameId];
   const data = (({ id, name, thumbnail, pictureFilename }) => {
