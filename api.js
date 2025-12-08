@@ -49,7 +49,7 @@ async function submitTry(gameId, objectiveId, pos) {
     objective.top < pos.y &&
     pos.y < objective.bottom
   ) {
-    return { success: true };
+    return { success: true, token: "token", objective };
   } else {
     return { fail: true, objective };
   }
