@@ -46,19 +46,24 @@ function createGameOption(game) {
 }
 
 async function initGame(gameId) {
-  const gameData = await api.getGameData(gameId);
+  currentGame = await api.getGameData(gameId);
 
-  const objectivesContainer = document.querySelector(".objectives");
-  objectivesContainer.innerHTML = "";
-  for (const id in gameData.objectives) {
-    const objective = gameData.objectives[id];
-    const objectiveElement = createObjectiveElement(objective);
-    objectivesContainer.appendChild(objectiveElement);
-  }
+  createObjectivesDisplay(currentGame.objectives);
+  createObjectivesDropdown(currentGame.objectives);
 
   scaleFactor = 0;
   setImage(currentGame.pictureFilename);
   updateZoom();
+}
+
+function createObjectivesDisplay(objectives) {
+  const objectivesContainer = document.querySelector(".objectives");
+  objectivesContainer.innerHTML = "";
+  for (const id in objectives) {
+    const objective = objectives[id];
+    const objectiveElement = createObjectiveElement(objective);
+    objectivesContainer.appendChild(objectiveElement);
+  }
 }
 
 function createObjectiveElement(objective) {
@@ -87,6 +92,34 @@ function createObjectiveElement(objective) {
   return objectiveElement;
 }
 
+async function handleObjectiveSubmit(event) {
+  const target = event.target;
+
+  const res = await api.submitTry(
+    currentGame.id,
+    parseInt(target.dataset.id),
+    markerRelativePos
+  );
+
+  console.log(res);
+}
+
+function createObjectivesDropdown(objectives) {
+  const objectivesDropdown = document.querySelector(".objectives-dropdown");
+  objectivesDropdown.innerHTML = "";
+
+  for (const id in objectives) {
+    const objective = objectives[id];
+    const objectiveButton = document.createElement("button");
+    objectiveButton.textContent = objective.name;
+    objectiveButton.dataset.id = objective.id;
+    objectivesDropdown.appendChild(objectiveButton);
+    objectiveButton.addEventListener("click", handleObjectiveSubmit);
+  }
+
+  return objectivesDropdown;
+}
+
 function setImage(imageName) {
   imgtag.src = "./imgs/pictures/" + imageName;
 }
@@ -102,34 +135,56 @@ function handleImageButtonClick(event) {
 function handleGameClick(event) {
   console.log(event);
   const target = event.target;
+  if (target !== imgtag) return;
   // convert mouse position relative to the picture's dimensions
   // to a value in a scale between 0 and 1
-  const normalizedPos = {
+  markerRelativePos = {
     x: event.offsetX / imgtag.clientWidth,
     y: event.offsetY / imgtag.clientHeight,
   };
 
-  if (objective.top) {
-    objective.right = normalizedPos.x;
-    objective.bottom = normalizedPos.y;
-    objective.name = prompt();
-    console.log({ ...objective });
-    objective.top = null;
-  } else {
-    objective.top = normalizedPos.y;
-    objective.left = normalizedPos.x;
-  }
+  const pos = { x: event.offsetX, y: event.offsetY };
+  placeMarker(pos);
+  placeObjectivesDropdown(pos, markerRelativePos);
+}
 
+function placeMarker(pos) {
   const markerSize = imgtag.offsetWidth * 0.02;
   marker.style.width = markerSize + "px";
   marker.style.height = markerSize + "px";
-  marker.style.left = event.offsetX - markerSize / 2 + "px";
-  marker.style.top = event.offsetY - markerSize / 2 + "px";
+  marker.style.left = pos.x - markerSize / 2 + "px";
+  marker.style.top = pos.y - markerSize / 2 + "px";
   marker.classList.remove("hidden");
+}
+
+function placeObjectivesDropdown(pos, markerRelativePos) {
+  const objectivesDropdown = document.querySelector(".objectives-dropdown");
+  const markerSize = imgtag.offsetWidth * 0.02;
+
+  if (markerRelativePos.x < 0.5) {
+    objectivesDropdown.style.left = pos.x + markerSize / 2 + "px";
+    objectivesDropdown.style.right = null;
+  } else {
+    objectivesDropdown.style.left = null;
+    objectivesDropdown.style.right =
+      imgtag.clientWidth - pos.x + markerSize / 2 + "px";
+  }
+
+  if (markerRelativePos.y < 0.5) {
+    objectivesDropdown.style.top = pos.y + markerSize / 2 + "px";
+    objectivesDropdown.style.bottom = null;
+  } else {
+    objectivesDropdown.style.top = null;
+    objectivesDropdown.style.bottom =
+      imgtag.clientHeight - pos.y + markerSize / 2 + "px";
+  }
+
+  objectivesDropdown.classList.remove("hidden");
 }
 
 function handleGameHover(event) {
   const target = event.target;
+  if (target !== imgtag) return;
 
   const imageContainerSize = imageContainer.getBoundingClientRect();
 
@@ -161,6 +216,7 @@ function updateZoom() {
   }
 
   marker.classList.add("hidden");
+  document.querySelector(".objectives-dropdown").classList.add("hidden");
 }
 
 function scaleIn() {
@@ -198,9 +254,9 @@ function handleGameWheel(event) {
 const imgtag = document.querySelector("img");
 const imageContainer = document.querySelector(".image-container");
 const marker = document.querySelector(".marker");
-let scaleFactor = 0.5;
-
-imageContainer.addEventListener("wheel", handleGameHover);
+let currentGame = null;
+let markerRelativePos = { x: null, y: null };
+let scaleFactor = 0;
 
 imageContainer.addEventListener("click", handleGameClick);
 

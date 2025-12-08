@@ -40,4 +40,25 @@ async function getAllGames() {
   return games;
 }
 
-export default { getAllGames, getGameData, getGameObjectives };
+async function submitTry(gameId, objectiveId, pos) {
+  const objective = gamesData[gameId].objectives[objectiveId];
+
+  if (
+    objective.left < pos.x &&
+    pos.x < objective.right &&
+    objective.top < pos.y &&
+    pos.y < objective.bottom
+  ) {
+    return { success: true };
+  } else {
+    return { fail: true, objective };
+  }
+}
+
+export default {
+  getAllGames,
+  getGameData,
+  getGameObjectives,
+  getObjectivesLocation,
+  submitTry,
+};
