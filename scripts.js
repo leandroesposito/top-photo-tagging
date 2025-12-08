@@ -70,7 +70,6 @@ function createObjectiveElement(objective) {
   const objectiveElement = document.createElement("article");
   objectiveElement.classList.add("card");
   objectiveElement.classList.add("objective");
-  objectiveElement.addEventListener("click", handleGameOptionClick);
 
   const thumbnail = document.createElement("div");
   thumbnail.classList.add("thumbnail");
@@ -124,16 +123,7 @@ function setImage(imageName) {
   imgtag.src = "./imgs/pictures/" + imageName;
 }
 
-function handleImageButtonClick(event) {
-  const imageId = event.target.dataset.imageId;
-  const imageName = images[imageId];
-  setImage(imageName);
-  updateZoom();
-  showObjectives();
-}
-
 function handleGameClick(event) {
-  console.log(event);
   const target = event.target;
   if (target !== imgtag) return;
   // convert mouse position relative to the picture's dimensions
