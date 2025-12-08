@@ -96,12 +96,20 @@ body {
 
 .target-box {
   pointer-events: none;
+  position: absolute;
+  border: 2px solid red;
+  box-shadow: 0 0 5px lime, 0 0 5px lime inset;
 }
 
 .objectives-dropdown {
   position: absolute;
   display: flex;
   flex-direction: column;
+}
+
+.found {
+  background-color: rgb(0, 199, 0);
+  pointer-events: none;
 }
 
 @keyframes breath {
@@ -130,4 +138,30 @@ body {
 .image-container img.zoomed {
   width: unset;
   height: unset;
+}
+
+.flash-message {
+  position: fixed;
+  top: 2rem;
+  padding: 1rem 2rem;
+  border: 5px solid;
+  border-radius: 1rem;
+  background-color: white;
+  font-size: 1.5rem;
+  transition: transform 0.7s ease-out;
+}
+
+.flash-message.success {
+  background-color: rgb(0, 235, 0);
+  border-color: green;
+}
+
+.flash-message.fail {
+  background-color: rgb(255, 101, 101);
+  border-color: red;
+}
+
+.hidden-message {
+  transition: transform 0.7s ease-in;
+  transform: translateY(-200%);
 }

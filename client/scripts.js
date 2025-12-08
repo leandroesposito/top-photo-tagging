@@ -70,6 +70,7 @@ function createObjectiveElement(objective) {
   const objectiveElement = document.createElement("article");
   objectiveElement.classList.add("card");
   objectiveElement.classList.add("objective");
+  objectiveElement.dataset.id = objective.id;
 
   const thumbnail = document.createElement("div");
   thumbnail.classList.add("thumbnail");
@@ -93,14 +94,75 @@ function createObjectiveElement(objective) {
 
 async function handleObjectiveSubmit(event) {
   const target = event.target;
+  const objectiveId = parseInt(target.dataset.id);
 
   const res = await api.submitTry(
     currentGame.id,
-    parseInt(target.dataset.id),
+    objectiveId,
     markerRelativePos
   );
 
-  console.log(res);
+  if (res.success) {
+    handleSuccess(res);
+  } else if (res.fail) {
+    handleFail(objectiveId);
+  }
+
+  const objectivesDropdown = document.querySelector(".objectives-dropdown");
+  objectivesDropdown.classList.add("hidden");
+}
+
+function handleSuccess(res) {
+  const objectiveId = res.objective.id;
+
+  localStorage.setItem("token", res.token);
+
+  objectivesFound.push(res.objective);
+  drawTarget(res.objective);
+  paintFound(objectiveId);
+  showFlashMessage(
+    `You have found ${currentGame.objectives[objectiveId].name}!`,
+    "success"
+  );
+  marker.classList.add("hidden");
+}
+
+function handleFail(objectiveId) {
+  showFlashMessage(
+    `${currentGame.objectives[objectiveId].name} is not there, try again.`,
+    "fail"
+  );
+}
+
+function paintFound(objectiveId) {
+  const objectiveElements = document.querySelectorAll(
+    `.objective[data-id="${objectiveId}"]`
+  );
+
+  objectiveElements.forEach((e) => e.classList.add("found"));
+}
+
+function showFlashMessage(message, type) {
+  const div = document.createElement("div");
+  div.textContent = message;
+  div.classList.add("flash-message");
+  div.classList.add(type);
+  div.classList.add("hidden-message");
+
+  document.body.appendChild(div);
+  setTimeout(() => {
+    div.classList.remove("hidden-message");
+  }, 10);
+
+  setTimeout(() => {
+    document.body.addEventListener("click", function dismissFlashMessage() {
+      div.classList.add("hidden-message");
+      setTimeout(() => {
+        div.remove();
+      }, 1000);
+      document.body.removeEventListener("click", dismissFlashMessage);
+    });
+  }, 3000);
 }
 
 function createObjectivesDropdown(objectives) {
@@ -111,6 +173,7 @@ function createObjectivesDropdown(objectives) {
     const objective = objectives[id];
     const objectiveButton = document.createElement("button");
     objectiveButton.textContent = objective.name;
+    objectiveButton.classList.add("objective");
     objectiveButton.dataset.id = objective.id;
     objectivesDropdown.appendChild(objectiveButton);
     objectiveButton.addEventListener("click", handleObjectiveSubmit);
@@ -207,6 +270,7 @@ function updateZoom() {
 
   marker.classList.add("hidden");
   document.querySelector(".objectives-dropdown").classList.add("hidden");
+  showFound();
 }
 
 function scaleIn() {
@@ -241,12 +305,45 @@ function handleGameWheel(event) {
   }
 }
 
+function showFound() {
+  removeTargets();
+
+  objectivesFound.forEach((objective) => {
+    drawTarget(objective);
+  });
+}
+
+function removeTargets() {
+  const objectives = document.querySelectorAll(".target-box");
+  objectives.forEach((o) => {
+    o.remove();
+  });
+}
+
+function drawTarget(objective) {
+  const targetBox = document.createElement("div");
+  const width = imgtag.clientWidth;
+  const height = imgtag.clientHeight;
+
+  targetBox.dataset.name = objective.name;
+
+  targetBox.style.left = objective.left * width + "px";
+  targetBox.style.top = objective.top * height + "px";
+  targetBox.style.width = (objective.right - objective.left) * width + "px";
+  targetBox.style.height = (objective.bottom - objective.top) * height + "px";
+
+  targetBox.classList.add("target-box");
+
+  imageContainer.appendChild(targetBox);
+}
+
 const imgtag = document.querySelector("img");
 const imageContainer = document.querySelector(".image-container");
 const marker = document.querySelector(".marker");
 let currentGame = null;
 let markerRelativePos = { x: null, y: null };
 let scaleFactor = 0;
+const objectivesFound = [];
 
 imageContainer.addEventListener("click", handleGameClick);
 
@@ -255,44 +352,3 @@ imageContainer.addEventListener("mousemove", handleGameHover);
 imageContainer.addEventListener("wheel", handleGameWheel);
 
 await initSite();
-
-function removeObjectives() {
-  const objectives = document.querySelectorAll(".target-box");
-  objectives.forEach((o) => {
-    o.remove();
-  });
-}
-
-async function showObjectives() {
-  removeObjectives();
-  const objectives = await api.getObjectivesLocation(currentGame.id);
-
-  for (const id in objectives) {
-    const objective = objectives[id];
-    if (!objective.name) continue;
-
-    const targetBox = document.createElement("div");
-    const width = imgtag.clientWidth;
-    const height = imgtag.clientHeight;
-
-    targetBox.dataset.name = objective.name;
-
-    targetBox.style.left = objective.left * width + "px";
-    targetBox.style.top = objective.top * height + "px";
-    targetBox.style.width = (objective.right - objective.left) * width + "px";
-    targetBox.style.height = (objective.bottom - objective.top) * height + "px";
-
-    targetBox.style.position = "absolute";
-    targetBox.style.border = "2px solid red";
-    targetBox.style.boxShadow = "0 0 5px lime, 0 0 5px lime inset";
-
-    targetBox.style.animationName = "breath";
-    targetBox.style.animationDuration = "2s";
-    targetBox.style.animationTimingFunction = "ease-in-out";
-    targetBox.style.animationIterationCount = "infinite";
-
-    targetBox.classList.add("target-box");
-
-    imageContainer.appendChild(targetBox);
-  }
-}
