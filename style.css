@@ -16,7 +16,7 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .games {
@@ -71,6 +71,11 @@ body {
   overflow: auto;
 }
 
+.viewport-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .marker {
   position: absolute;
   width: 2rem;
@@ -87,6 +92,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.target-box {
+  pointer-events: none;
+}
+
+.objectives-dropdown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes breath {
