@@ -54,6 +54,18 @@ async function initGame(gameId) {
   scaleFactor = 0;
   setImage(currentGame.pictureFilename);
   updateZoom();
+  initTimer();
+}
+
+function initTimer() {
+  const timerElement = document.querySelector(".timer");
+  const startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const now = Date.now();
+    const elapsedTime = new Date(now - startTime);
+    timerElement.textContent = elapsedTime.toISOString().substr(11, 8);
+  }, 100);
+  timerElement.classList.remove("hidden");
 }
 
 function createObjectivesDisplay(objectives) {
@@ -344,6 +356,7 @@ let currentGame = null;
 let markerRelativePos = { x: null, y: null };
 let scaleFactor = 0;
 const objectivesFound = [];
+let timerInterval;
 
 imageContainer.addEventListener("click", handleGameClick);
 
