@@ -1,4 +1,4 @@
-import gamesData from "./gamesData.js";
+import { gamesData, leaderboard } from "./gamesData.js";
 
 async function getGameObjectives(gameId) {
   const game = gamesData[gameId];
@@ -40,6 +40,10 @@ async function getAllGames() {
   return games;
 }
 
+async function getLeaderboard(gameId) {
+  return leaderboard[gameId];
+}
+
 async function submitTry(gameId, objectiveId, pos) {
   const objective = gamesData[gameId].objectives[objectiveId];
 
@@ -49,10 +53,21 @@ async function submitTry(gameId, objectiveId, pos) {
     objective.top < pos.y &&
     pos.y < objective.bottom
   ) {
-    return { success: true, token: "token", objective };
+    if (objectiveId === 3) {
+      // use random value as win to test
+      return { success: true, win: true, token: "token", objective };
+    } else {
+      return { success: true, token: "token", objective };
+    }
   } else {
     return { fail: true, objective };
   }
+}
+
+async function submitScore(gameId, name, time) {
+  leaderboard[gameId].push({ gameId, name, time });
+
+  return { success: true };
 }
 
 export default {
@@ -60,5 +75,7 @@ export default {
   getGameData,
   getGameObjectives,
   getObjectivesLocation,
+  getLeaderboard,
   submitTry,
+  submitScore,
 };

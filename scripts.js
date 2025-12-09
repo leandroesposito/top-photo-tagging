@@ -55,6 +55,7 @@ async function initGame(gameId) {
   setImage(currentGame.pictureFilename);
   updateZoom();
   initTimer();
+  await initLeaderboard();
 }
 
 function initTimer() {
@@ -66,6 +67,24 @@ function initTimer() {
     timerElement.textContent = elapsedTime.toISOString().substr(11, 8);
   }, 100);
   timerElement.classList.remove("hidden");
+}
+
+async function initLeaderboard() {
+  const scores = await api.getLeaderboard(currentGame.id);
+  const scoresContainer = document.querySelector(".leaderboard .scores");
+  scoresContainer.innerHTML = "";
+
+  scores.forEach((score) => {
+    const nameElement = document.createElement("div");
+    nameElement.classList.add("name");
+    nameElement.textContent = score.name;
+    scoresContainer.appendChild(nameElement);
+
+    const timeElement = document.createElement("div");
+    timeElement.classList.add("time");
+    timeElement.textContent = score.time;
+    scoresContainer.appendChild(timeElement);
+  });
 }
 
 function createObjectivesDisplay(objectives) {
@@ -120,6 +139,10 @@ async function handleObjectiveSubmit(event) {
     handleFail(objectiveId);
   }
 
+  if (res.win) {
+    handleWin();
+  }
+
   const objectivesDropdown = document.querySelector(".objectives-dropdown");
   objectivesDropdown.classList.add("hidden");
 }
@@ -144,6 +167,13 @@ function handleFail(objectiveId) {
     `${currentGame.objectives[objectiveId].name} is not there, try again.`,
     "fail"
   );
+}
+
+function handleWin() {
+  const scoreSubmitContainer = document.querySelector(".score-submit");
+  scoreSubmitContainer.classList.remove("hidden");
+
+  clearInterval(timerInterval);
 }
 
 function paintFound(objectiveId) {
@@ -269,6 +299,33 @@ function handleGameHover(event) {
   );
 }
 
+function handleLeaderboardButton() {
+  const leaderboard = document.querySelector(".leaderboard");
+  leaderboard.classList.remove("hidden");
+}
+
+function handleLeaderboardCloseButton() {
+  const leaderboard = document.querySelector(".leaderboard");
+  leaderboard.classList.add("hidden");
+}
+
+async function handleScoreSubmit(event) {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const time = document.querySelector(".timer").textContent;
+
+  const res = await api.submitScore(currentGame.id, formData.get("name"), time);
+
+  if (res.success) {
+    await initLeaderboard();
+    handleLeaderboardButton();
+  }
+
+  const scoreSubmitContainer = event.target.closest(".score-submit");
+  scoreSubmitContainer.classList.add("hidden");
+}
+
 function updateZoom() {
   const naturalWidth = imgtag.naturalWidth;
   const naturalHeight = imgtag.naturalHeight;
@@ -357,11 +414,22 @@ let markerRelativePos = { x: null, y: null };
 let scaleFactor = 0;
 const objectivesFound = [];
 let timerInterval;
+const leaderboardButton = document.querySelector(".leaderboard-button");
+const leaderboardCloseButton = document.querySelector(
+  ".leaderboard .close-button"
+);
+const scoreSubmitForm = document.querySelector(".score-submit form");
 
 imageContainer.addEventListener("click", handleGameClick);
 
 imageContainer.addEventListener("mousemove", handleGameHover);
 
 imageContainer.addEventListener("wheel", handleGameWheel);
+
+leaderboardButton.addEventListener("click", handleLeaderboardButton);
+
+leaderboardCloseButton.addEventListener("click", handleLeaderboardCloseButton);
+
+scoreSubmitForm.addEventListener("submit", handleScoreSubmit);
 
 await initSite();
