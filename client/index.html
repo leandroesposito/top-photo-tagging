@@ -11,7 +11,28 @@
       <div class="body">
         <div class="games"></div>
         <div class="objectives"></div>
-        <div class="timer hidden"></div>
+        <div class="leaderboard hidden">
+          <div class="title">Leaderboard</div>
+          <button class="close-button">X</button>
+          <div class="scores"></div>
+        </div>
+        <div class="score-submit hidden">
+          <div class="description">
+            Congratulations you have won! write your name to be in the
+            leaderboard.
+          </div>
+          <form action="">
+            <div class="form-row">
+              <label for="name">Name</label>
+              <input type="text" name="name" id="name" required />
+            </div>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+        <div class="body-row">
+          <div class="timer hidden"></div>
+          <button class="leaderboard-button">Leaderboard</button>
+        </div>
       </div>
       <div class="image-container">
         <div class="viewport-wrapper">

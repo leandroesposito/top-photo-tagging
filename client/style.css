@@ -19,6 +19,10 @@ body {
   display: none !important;
 }
 
+button {
+  cursor: pointer;
+}
+
 .games {
   display: grid;
   gap: 1rem;
@@ -164,4 +168,73 @@ body {
 .hidden-message {
   transition: transform 0.7s ease-in;
   transform: translateY(-200%);
+}
+
+.body-row {
+  position: relative;
+}
+
+.leaderboard-button {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: orange;
+  border: 5px solid rgb(218, 141, 0);
+  padding: 1rem;
+  border-radius: 1rem;
+  z-index: 1;
+}
+
+.leaderboard {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: orange;
+  border: 5px solid rgb(218, 141, 0);
+  padding: 1rem;
+  border-radius: 1rem;
+  display: grid;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.leaderboard .title {
+  text-align: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.scores {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  border: 1px solid black;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.scores > div {
+  padding: 0.5rem;
+}
+
+.scores > div:not(:nth-last-child(-n + 2)) {
+  border-bottom: 1px solid black;
+}
+
+.score-submit {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: orange;
+  border: 5px solid rgb(218, 141, 0);
+  padding: 1rem;
+  border-radius: 1rem;
+  display: grid;
+  z-index: 1;
 }
