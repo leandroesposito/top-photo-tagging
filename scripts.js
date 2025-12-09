@@ -51,6 +51,12 @@ async function initGame(gameId) {
   createObjectivesDisplay(currentGame.objectives);
   createObjectivesDropdown(currentGame.objectives);
 
+  const gameSetupContainer = document.querySelector(".game-setup");
+  gameSetupContainer.remove();
+
+  const gameplayContainer = document.querySelector(".game-play");
+  gameplayContainer.classList.remove("hidden");
+
   scaleFactor = 0;
   setImage(currentGame.pictureFilename);
   updateZoom();
@@ -85,6 +91,8 @@ async function initLeaderboard() {
     timeElement.textContent = score.time;
     scoresContainer.appendChild(timeElement);
   });
+
+  leaderboardButton.classList.remove("hidden");
 }
 
 function createObjectivesDisplay(objectives) {
@@ -406,7 +414,7 @@ function drawTarget(objective) {
   imageContainer.appendChild(targetBox);
 }
 
-const imgtag = document.querySelector("img");
+const imgtag = document.querySelector(".image-container img");
 const imageContainer = document.querySelector(".image-container");
 const marker = document.querySelector(".marker");
 let currentGame = null;
