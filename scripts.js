@@ -439,6 +439,8 @@ const leaderboardCloseButton = document.querySelector(
 );
 const scoreSubmitForm = document.querySelector(".score-submit form");
 const objective = document.querySelector(".objectives");
+const zoomInButton = document.querySelector(".zoom-in");
+const zoomOutButton = document.querySelector(".zoom-out");
 
 imageContainer.addEventListener("click", handleGameClick);
 
@@ -455,5 +457,8 @@ scoreSubmitForm.addEventListener("submit", handleScoreSubmit);
 objective.addEventListener("mouseenter", handleObjectivesMouseEnter);
 
 imgtag.addEventListener("load", handleImgTagOnload);
+
+zoomInButton.addEventListener("click", scaleIn);
+zoomOutButton.addEventListener("click", scaleOut);
 
 await initSite();
