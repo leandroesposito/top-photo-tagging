@@ -21,8 +21,8 @@ async function getObjectivesLocation(gameId) {
 
 async function getGameData(gameId) {
   const game = gamesData[gameId];
-  const data = (({ id, name, thumbnail, pictureFilename }) => {
-    return { id, name, thumbnail, pictureFilename };
+  const data = (({ id, name, thumbnail, pictureFilename, credits }) => {
+    return { id, name, thumbnail, pictureFilename, credits };
   })(game);
 
   data.objectives = await getGameObjectives(gameId);

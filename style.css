@@ -502,3 +502,15 @@ button {
 .zoom-controlls button {
   font-weight: bold;
 }
+
+footer:not(:empty) {
+  padding: 1rem;
+  background-color: var(--surface-1);
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+footer a {
+  color: var(--primary-color);
+}
