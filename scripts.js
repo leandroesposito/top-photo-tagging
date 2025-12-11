@@ -57,6 +57,9 @@ async function initGame(gameId) {
   const gameplayContainer = document.querySelector(".game-play");
   gameplayContainer.classList.remove("hidden");
 
+  const gameContainer = document.querySelector(".game");
+  gameContainer.classList.remove("hidden");
+
   const body = document.querySelector(".body");
   body.classList.add("playing");
 
