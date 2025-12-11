@@ -235,6 +235,7 @@ button {
   background-color: var(--surface-3);
   border-radius: 0.5rem;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .card .thumbnail {
