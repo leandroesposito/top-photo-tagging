@@ -409,6 +409,7 @@ function removeTargets() {
 }
 
 function drawTarget(objective) {
+  const targetsContainer = document.querySelector(".targets-container");
   const targetBox = document.createElement("div");
   const width = imgtag.clientWidth;
   const height = imgtag.clientHeight;
@@ -422,7 +423,7 @@ function drawTarget(objective) {
 
   targetBox.classList.add("target-box");
 
-  imageContainer.appendChild(targetBox);
+  targetsContainer.appendChild(targetBox);
 }
 
 const imgtag = document.querySelector(".image-container img");
