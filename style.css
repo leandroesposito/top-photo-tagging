@@ -335,7 +335,7 @@ button {
   font-size: 1.1rem;
 }
 
-.found {
+.objective.found {
   background-color: var(--success-background);
   color: black;
   pointer-events: none;
