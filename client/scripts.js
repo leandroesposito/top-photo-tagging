@@ -68,6 +68,9 @@ async function initGame(gameId) {
   updateZoom();
   initTimer();
   await initLeaderboard();
+
+  const footer = document.querySelector("footer");
+  footer.innerHTML = `Picture: ${currentGame.name}, You can find more of this artist <a href="${currentGame.credits}" target="_blank">Here</a>`;
 }
 
 function initTimer() {
