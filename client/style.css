@@ -255,6 +255,7 @@ button {
 
 .card.objective {
   flex-basis: 100px;
+  background-color: var(--surface-1);
 }
 
 .card.objective .thumbnail {
@@ -299,8 +300,9 @@ button {
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  border: 1px solid lime;
-  box-shadow: 0 0 10px lime, 0 0 10px lime inset;
+  border: 2px solid var(--surface-1);
+  box-shadow: 0 0 10px 5px var(--prinary-color),
+    0 0 10px var(--prinary-color) inset;
   bottom: 1rem;
   pointer-events: none;
   animation-name: breath;
@@ -315,8 +317,9 @@ button {
 .target-box {
   pointer-events: none;
   position: absolute;
-  border: 2px solid red;
-  box-shadow: 0 0 5px lime, 0 0 5px lime inset;
+  border: 2px solid var(--surface-1);
+  box-shadow: 0 0 8px 8px var(--prinary-color),
+    0 0 5px var(--prinary-color) inset;
 }
 
 .objectives-dropdown {
@@ -328,7 +331,8 @@ button {
 .objectives-dropdown button {
   border-radius: unset;
   border: 1px solid black;
-  padding: 0 1rem;
+  padding: 0.2rem 1.4rem;
+  font-size: 1.1rem;
 }
 
 .found {
@@ -342,15 +346,11 @@ button {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.5);
+    transform: scale(1.2);
   }
   100% {
     transform: scale(1);
   }
-}
-
-.dot {
-  border: 2px solid cyan;
 }
 
 .image-container img {
