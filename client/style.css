@@ -484,3 +484,20 @@ button {
 .game {
   display: flex;
 }
+
+.zoom-controlls {
+  display: flex;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  align-items: baseline;
+  gap: 1rem;
+  background-color: var(--surface-1);
+  border-radius: 1rem;
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.zoom-controlls button {
+  font-weight: bold;
+}
