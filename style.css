@@ -442,6 +442,8 @@ button {
   border-radius: 1rem;
   overflow: hidden;
   background-color: var(--surface-4);
+  max-height: 50vh;
+  overflow: auto;
 }
 
 .scores > div {
