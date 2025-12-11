@@ -57,6 +57,9 @@ async function initGame(gameId) {
   const gameplayContainer = document.querySelector(".game-play");
   gameplayContainer.classList.remove("hidden");
 
+  const body = document.querySelector(".body");
+  body.classList.add("playing");
+
   scaleFactor = 0;
   setImage(currentGame.pictureFilename);
   updateZoom();
@@ -382,6 +385,14 @@ function handleGameWheel(event) {
   }
 }
 
+function handleObjectivesMouseEnter() {
+  objective.classList.toggle("bottom");
+}
+
+function handleImgTagOnload() {
+  imageContainer.scrollIntoView(false);
+}
+
 function showFound() {
   removeTargets();
 
@@ -427,6 +438,7 @@ const leaderboardCloseButton = document.querySelector(
   ".leaderboard .close-button"
 );
 const scoreSubmitForm = document.querySelector(".score-submit form");
+const objective = document.querySelector(".objectives");
 
 imageContainer.addEventListener("click", handleGameClick);
 
@@ -439,5 +451,9 @@ leaderboardButton.addEventListener("click", handleLeaderboardButton);
 leaderboardCloseButton.addEventListener("click", handleLeaderboardCloseButton);
 
 scoreSubmitForm.addEventListener("submit", handleScoreSubmit);
+
+objective.addEventListener("mouseenter", handleObjectivesMouseEnter);
+
+imgtag.addEventListener("load", handleImgTagOnload);
 
 await initSite();

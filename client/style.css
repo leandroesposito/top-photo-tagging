@@ -110,11 +110,16 @@ body {
   display: grid;
   gap: 2rem;
   background-color: var(--surface-1);
-  padding: 2rem;
   border-radius: 1rem;
+  padding: 2rem;
   margin: 2rem;
   box-sizing: border-box;
   text-align: center;
+}
+
+.body.playing {
+  padding: 2rem 2rem 0 2rem;
+  margin: 2rem 2rem 0 2rem;
 }
 
 .loading {
@@ -206,10 +211,24 @@ button {
   gap: 1rem;
 }
 
+.playing .game-play {
+  gap: 0;
+}
+
 .objectives {
-  display: grid;
+  display: flex;
+  justify-content: center;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  position: absolute;
+  top: 1rem;
+  width: 100%;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.objectives.bottom {
+  top: unset;
+  bottom: 2rem;
 }
 
 .card {
@@ -234,6 +253,10 @@ button {
   transform: scale(1.1);
 }
 
+.card.objective {
+  flex-basis: 100px;
+}
+
 .card.objective .thumbnail {
   height: 100px;
 }
@@ -252,6 +275,11 @@ button {
 
 .card .name {
   text-align: center;
+}
+
+.game {
+  width: 100%;
+  position: relative;
 }
 
 .image-container {
@@ -449,4 +477,8 @@ button {
   .root {
     width: 95vw;
   }
+}
+
+.game {
+  display: flex;
 }
