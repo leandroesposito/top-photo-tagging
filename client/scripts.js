@@ -1,4 +1,5 @@
 import api from "./api.js";
+import htmlCreator from "./htmlCreator.js";
 
 async function initSite() {
   const games = await api.getAllGames();
@@ -7,7 +8,10 @@ async function initSite() {
   gamesContainer.innerHTML = "";
   for (const gameId in games) {
     const game = games[gameId];
-    const gameOption = createGameOption(game);
+    const gameOption = htmlCreator.createGameOption(
+      game,
+      handleGameOptionClick
+    );
     gamesContainer.appendChild(gameOption);
   }
 }
@@ -18,38 +22,11 @@ function handleGameOptionClick(event) {
   initGame(id);
 }
 
-function createGameOption(game) {
-  const gameOption = document.createElement("article");
-  gameOption.classList.add("card");
-  gameOption.classList.add("game-option");
-  gameOption.dataset.id = game.id;
-  gameOption.addEventListener("click", handleGameOptionClick);
-
-  const thumbnail = document.createElement("div");
-  thumbnail.classList.add("thumbnail");
-
-  const img = document.createElement("img");
-  img.src = "./imgs/thumbnails/" + game.thumbnail;
-  thumbnail.appendChild(img);
-  gameOption.appendChild(thumbnail);
-
-  const description = document.createElement("div");
-  description.classList.add("description");
-  gameOption.appendChild(description);
-
-  const name = document.createElement("div");
-  name.classList.add("name");
-  name.textContent = game.name;
-  description.appendChild(name);
-
-  return gameOption;
-}
-
 async function initGame(gameId) {
   currentGame = await api.getGameData(gameId);
 
-  createObjectivesDisplay(currentGame.objectives);
-  createObjectivesDropdown(currentGame.objectives);
+  generateObjectivesDisplay(currentGame.objectives);
+  generateObjectivesDropdown(currentGame.objectives);
 
   const gameSetupContainer = document.querySelector(".game-setup");
   gameSetupContainer.remove();
@@ -87,57 +64,16 @@ function initTimer() {
 async function initLeaderboard() {
   const scores = await api.getLeaderboard(currentGame.id);
   const scoresContainer = document.querySelector(".leaderboard .scores");
-  scoresContainer.innerHTML = "";
-
-  scores.forEach((score) => {
-    const nameElement = document.createElement("div");
-    nameElement.classList.add("name");
-    nameElement.textContent = score.name;
-    scoresContainer.appendChild(nameElement);
-
-    const timeElement = document.createElement("div");
-    timeElement.classList.add("time");
-    timeElement.textContent = score.time;
-    scoresContainer.appendChild(timeElement);
-  });
+  scoresContainer.appendChild(htmlCreator.createScoresDisplay(scores));
 
   leaderboardButton.classList.remove("hidden");
 }
 
-function createObjectivesDisplay(objectives) {
+function generateObjectivesDisplay(objectives) {
   const objectivesContainer = document.querySelector(".objectives");
-  objectivesContainer.innerHTML = "";
-  for (const id in objectives) {
-    const objective = objectives[id];
-    const objectiveElement = createObjectiveElement(objective);
-    objectivesContainer.appendChild(objectiveElement);
-  }
-}
-
-function createObjectiveElement(objective) {
-  const objectiveElement = document.createElement("article");
-  objectiveElement.classList.add("card");
-  objectiveElement.classList.add("objective");
-  objectiveElement.dataset.id = objective.id;
-
-  const thumbnail = document.createElement("div");
-  thumbnail.classList.add("thumbnail");
-
-  const img = document.createElement("img");
-  img.src = "./imgs/objectives/" + objective.pictureFilename;
-  thumbnail.appendChild(img);
-  objectiveElement.appendChild(thumbnail);
-
-  const description = document.createElement("div");
-  description.classList.add("description");
-  objectiveElement.appendChild(description);
-
-  const name = document.createElement("div");
-  name.classList.add("name");
-  name.textContent = objective.name;
-  description.appendChild(name);
-
-  return objectiveElement;
+  objectivesContainer.appendChild(
+    htmlCreator.createObjectivesDisplay(objectives)
+  );
 }
 
 async function handleObjectiveSubmit(event) {
@@ -202,43 +138,15 @@ function paintFound(objectiveId) {
 }
 
 function showFlashMessage(message, type) {
-  const div = document.createElement("div");
-  div.textContent = message;
-  div.classList.add("flash-message");
-  div.classList.add(type);
-  div.classList.add("hidden-message");
-
-  document.body.appendChild(div);
-  setTimeout(() => {
-    div.classList.remove("hidden-message");
-  }, 10);
-
-  setTimeout(() => {
-    document.body.addEventListener("click", function dismissFlashMessage() {
-      div.classList.add("hidden-message");
-      setTimeout(() => {
-        div.remove();
-      }, 1000);
-      document.body.removeEventListener("click", dismissFlashMessage);
-    });
-  }, 3000);
+  htmlCreator.createFlashMessage(message, type).show();
 }
 
-function createObjectivesDropdown(objectives) {
+function generateObjectivesDropdown(objectives) {
   const objectivesDropdown = document.querySelector(".objectives-dropdown");
   objectivesDropdown.innerHTML = "";
-
-  for (const id in objectives) {
-    const objective = objectives[id];
-    const objectiveButton = document.createElement("button");
-    objectiveButton.textContent = objective.name;
-    objectiveButton.classList.add("objective");
-    objectiveButton.dataset.id = objective.id;
-    objectivesDropdown.appendChild(objectiveButton);
-    objectiveButton.addEventListener("click", handleObjectiveSubmit);
-  }
-
-  return objectivesDropdown;
+  objectivesDropdown.appendChild(
+    htmlCreator.createObjectivesDropdown(objectives, handleObjectiveSubmit)
+  );
 }
 
 function setImage(imageName) {
@@ -416,18 +324,11 @@ function removeTargets() {
 
 function drawTarget(objective) {
   const targetsContainer = document.querySelector(".targets-container");
-  const targetBox = document.createElement("div");
-  const width = imgtag.clientWidth;
-  const height = imgtag.clientHeight;
-
-  targetBox.dataset.name = objective.name;
-
-  targetBox.style.left = objective.left * width + "px";
-  targetBox.style.top = objective.top * height + "px";
-  targetBox.style.width = (objective.right - objective.left) * width + "px";
-  targetBox.style.height = (objective.bottom - objective.top) * height + "px";
-
-  targetBox.classList.add("target-box");
+  const targetBox = htmlCreator.createTargetBox(
+    imgtag.clientWidth,
+    imgtag.clientHeight,
+    objective
+  );
 
   targetsContainer.appendChild(targetBox);
 }
