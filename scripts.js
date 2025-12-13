@@ -56,7 +56,7 @@ function initTimer() {
   timerInterval = setInterval(() => {
     const now = Date.now();
     const elapsedTime = new Date(now - startTime);
-    timerElement.textContent = elapsedTime.toISOString().substr(11, 8);
+    timerElement.textContent = elapsedTime.toISOString().substring(11, 19);
   }, 100);
   timerElement.classList.remove("hidden");
 }
