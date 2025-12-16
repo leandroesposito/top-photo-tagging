@@ -36,7 +36,7 @@ export default {
     thumbnail.classList.add("thumbnail");
 
     const img = document.createElement("img");
-    img.src = "./imgs/objectives/" + objective.pictureFilename;
+    img.src = "./imgs/objectives/" + objective.picturefilename;
     thumbnail.appendChild(img);
     objectiveElement.appendChild(thumbnail);
 
