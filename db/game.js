@@ -22,6 +22,10 @@ async function getGameWithObjectives(id) {
 
   const game = (await runQuery(gameQuery, gameParams))[0];
 
+  if (!game) {
+    return null;
+  }
+
   const objectivesQuery = `
     SELECT id, name, pictureFilename FROM objectives WHERE game_id=$1;
   `;
