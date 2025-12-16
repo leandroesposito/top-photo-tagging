@@ -41,7 +41,7 @@ async function initGame(gameId) {
   body.classList.add("playing");
 
   scaleFactor = 0;
-  setImage(currentGame.pictureFilename);
+  setImage(currentGame.picturefilename);
   updateZoom();
   initTimer();
   await initLeaderboard();

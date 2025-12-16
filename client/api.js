@@ -56,14 +56,12 @@ async function getObjectivesLocation(gameId) {
 }
 
 async function getGameData(gameId) {
-  const game = gamesData[gameId];
-  const data = (({ id, name, thumbnail, pictureFilename, credits }) => {
-    return { id, name, thumbnail, pictureFilename, credits };
-  })(game);
-
-  data.objectives = await getGameObjectives(gameId);
-
-  return data;
+  try {
+    const res = await makeRequest(`http://localhost:3000/games/${gameId}`);
+    return res;
+  } catch (error) {
+    console.error("ERROR", error);
+  }
 }
 
 async function getAllGames() {
