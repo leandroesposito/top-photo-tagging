@@ -1,5 +1,41 @@
 import { gamesData, leaderboard } from "./gamesData.js";
 
+async function makeRequest(endpoint, data, method = "GET") {
+  const options = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+  };
+
+  if (data) {
+    data.token = localStorage.getItem("token");
+    options.body = JSON.stringify(data);
+  }
+
+  return fetch(endpoint, options)
+    .then((response) => {
+      if (response.status === 404) {
+        return {
+          error: "404",
+        };
+      }
+
+      return response.json();
+    })
+    .then((json) => {
+      return json;
+    })
+    .catch((error) => {
+      console.error("FETCH ERROR", error);
+      if (error.message.startsWith("NetworkError")) {
+        return { errors: [error.message] };
+      }
+      throw error;
+    });
+}
+
 async function getGameObjectives(gameId) {
   const game = gamesData[gameId];
   const objectives = game.objectives;
@@ -31,13 +67,12 @@ async function getGameData(gameId) {
 }
 
 async function getAllGames() {
-  const games = {};
-
-  for (const id in gamesData) {
-    games[id] = await getGameData(id);
+  try {
+    const res = await makeRequest("http://localhost:3000/games");
+    return res;
+  } catch (error) {
+    console.error("ERROR", error);
   }
-
-  return games;
 }
 
 async function getLeaderboard(gameId) {
