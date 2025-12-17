@@ -1,7 +1,9 @@
+require("dotenv").config();
 const { param } = require("express-validator");
 const gameDB = require("../db/game");
 const NotFoundError = require("../errors/NotFoundError");
 const { checkValidations } = require("./validator-checker");
+const jwt = require("jsonwebtoken");
 
 const gameExists = () => {
   return param("gameId").custom(async (value, { req }) => {
@@ -15,6 +17,21 @@ const gameExists = () => {
   });
 };
 
+function initToken(game) {
+  const tokenData = {
+    startTime: new Date(),
+    gameId: game.id,
+    objectives: {},
+  };
+
+  for (const objectiveId in game.objectives) {
+    tokenData.objectives[objectiveId] = false;
+  }
+
+  const token = jwt.sign(tokenData, process.env.JWT_SECRET);
+  return token;
+}
+
 async function getAllGames(req, res) {
   const games = await gameDB.getAllGames();
   res.json(games);
@@ -25,7 +42,9 @@ const getGameWithObjectives = [
   checkValidations,
   async function getGameWithObjectives(req, res) {
     const game = req.locals.game;
-    res.json(game);
+    const token = initToken(game);
+
+    res.json({ ...game, token });
   },
 ];
 
