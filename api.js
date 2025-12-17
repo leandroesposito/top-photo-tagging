@@ -25,6 +25,9 @@ async function makeRequest(endpoint, data, method = "GET") {
       return response.json();
     })
     .then((json) => {
+      if (json.token) {
+        localStorage.setItem("token", json.token);
+      }
       return json;
     })
     .catch((error) => {
