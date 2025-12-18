@@ -14,6 +14,7 @@ const gameExists = () => {
       throw error;
     }
     req.locals = { game };
+    return true;
   });
 };
 
