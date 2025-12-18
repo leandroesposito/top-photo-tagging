@@ -7,7 +7,9 @@ function checkValidations(req, res, next) {
     if (req.locals?.error) {
       status = req.locals.error.statusCode;
     }
-    res.status(status).json({ errors: errors.array().map((e) => e.msg) });
+    return res
+      .status(status)
+      .json({ errors: errors.array().map((e) => e.msg) });
   }
   next();
 }
