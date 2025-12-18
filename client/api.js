@@ -1,5 +1,3 @@
-import { gamesData, leaderboard } from "./gamesData.js";
-
 async function makeRequest(endpoint, data) {
   const method = data ? "POST" : "GET";
   const options = {
@@ -38,25 +36,6 @@ async function makeRequest(endpoint, data) {
       }
       throw error;
     });
-}
-
-async function getGameObjectives(gameId) {
-  const game = gamesData[gameId];
-  const objectives = game.objectives;
-  const data = {};
-
-  for (const id in objectives) {
-    const objective = objectives[id];
-    data[id] = (({ id, name, pictureFilename }) => {
-      return { id, name, pictureFilename };
-    })(objective);
-  }
-
-  return data;
-}
-
-async function getObjectivesLocation(gameId) {
-  return gamesData[gameId].objectives;
 }
 
 async function getGameData(gameId) {
@@ -118,8 +97,6 @@ async function submitScore(gameId, name) {
 export default {
   getAllGames,
   getGameData,
-  getGameObjectives,
-  getObjectivesLocation,
   getLeaderboard,
   submitTry,
   submitScore,
