@@ -1,3 +1,5 @@
+const rootEndpoint = "https://top-photo-tagging.onrender.com";
+
 async function makeRequest(endpoint, data) {
   const method = data ? "POST" : "GET";
   const options = {
@@ -40,7 +42,7 @@ async function makeRequest(endpoint, data) {
 
 async function getGameData(gameId) {
   try {
-    const res = await makeRequest(`http://localhost:3000/games/${gameId}`);
+    const res = await makeRequest(`${rootEndpoint}/games/${gameId}`);
     return res;
   } catch (error) {
     console.error("ERROR", error);
@@ -49,7 +51,7 @@ async function getGameData(gameId) {
 
 async function getAllGames() {
   try {
-    const res = await makeRequest("http://localhost:3000/games");
+    const res = await makeRequest(`${rootEndpoint}/games`);
     return res;
   } catch (error) {
     console.error("ERROR", error);
@@ -58,9 +60,7 @@ async function getAllGames() {
 
 async function getLeaderboard(gameId) {
   try {
-    const res = await makeRequest(
-      `http://localhost:3000/leaderboard/${gameId}`
-    );
+    const res = await makeRequest(`${rootEndpoint}/leaderboard/${gameId}`);
     return res;
   } catch (error) {
     console.error("ERROR", error);
@@ -74,7 +74,7 @@ async function submitTry(objectiveId, coords) {
   };
 
   try {
-    const res = await makeRequest("http://localhost:3000/try", data);
+    const res = await makeRequest(`${rootEndpoint}/try`, data);
     return res;
   } catch (error) {
     console.error("ERROR", error);
@@ -85,7 +85,7 @@ async function submitScore(gameId, name) {
   try {
     const data = { name };
     const res = await makeRequest(
-      `http://localhost:3000/leaderboard/${gameId}`,
+      `${rootEndpoint}/leaderboard/${gameId}`,
       data
     );
     return res;
