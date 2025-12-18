@@ -54,12 +54,12 @@ const validateCoords = () => {
   });
 };
 
-const makeTry = [
+const postTry = [
   validateToken(),
   validateTry(),
   validateCoords(),
   checkValidations,
-  async function makeTry(req, res) {
+  async function postTry(req, res) {
     const { tokenData } = req.locals;
     const { coords, objectiveId } = req.body;
 
@@ -112,6 +112,6 @@ const makeTry = [
 ];
 
 module.exports = {
-  makeTry,
+  postTry,
   validateToken,
 };
