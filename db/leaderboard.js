@@ -10,13 +10,18 @@ async function getLeaderboard(gameId) {
 
 async function submitScore(gameId, name, time) {
   const query = `
-    INSERT INTO
-      leaderboard
-    (name, time, game_id)
+    INSERT INTO leaderboard
+      (name, time, game_id)
     VALUES
-    ($1, $2, $3);
+      ($1, $2, $3)
+    RETURNING id;
   `;
   const params = [name, time, gameId];
 
-  await runQuery(query, params);
+  return (await runQuery(query, params))[0];
 }
+
+module.exports = {
+  getLeaderboard,
+  submitScore,
+};
