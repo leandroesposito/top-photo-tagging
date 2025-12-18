@@ -78,7 +78,14 @@ async function getAllGames() {
 }
 
 async function getLeaderboard(gameId) {
-  return leaderboard[gameId];
+  try {
+    const res = await makeRequest(
+      `http://localhost:3000/leaderboard/${gameId}`
+    );
+    return res;
+  } catch (error) {
+    console.error("ERROR", error);
+  }
 }
 
 async function submitTry(objectiveId, coords) {
