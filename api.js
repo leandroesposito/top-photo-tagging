@@ -1,6 +1,7 @@
 import { gamesData, leaderboard } from "./gamesData.js";
 
-async function makeRequest(endpoint, data, method = "GET") {
+async function makeRequest(endpoint, data) {
+  const method = data ? "POST" : "GET";
   const options = {
     method,
     headers: {
