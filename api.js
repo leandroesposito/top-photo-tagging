@@ -102,10 +102,17 @@ async function submitTry(objectiveId, coords) {
   }
 }
 
-async function submitScore(gameId, name, time) {
-  leaderboard[gameId].push({ gameId, name, time });
-
-  return { success: true };
+async function submitScore(gameId, name) {
+  try {
+    const data = { name };
+    const res = await makeRequest(
+      `http://localhost:3000/leaderboard/${gameId}`,
+      data
+    );
+    return res;
+  } catch (error) {
+    console.error("ERROR", error);
+  }
 }
 
 export default {
