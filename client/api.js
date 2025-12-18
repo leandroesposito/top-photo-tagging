@@ -81,23 +81,17 @@ async function getLeaderboard(gameId) {
   return leaderboard[gameId];
 }
 
-async function submitTry(gameId, objectiveId, pos) {
-  const objective = gamesData[gameId].objectives[objectiveId];
+async function submitTry(objectiveId, coords) {
+  const data = {
+    objectiveId,
+    coords,
+  };
 
-  if (
-    objective.left < pos.x &&
-    pos.x < objective.right &&
-    objective.top < pos.y &&
-    pos.y < objective.bottom
-  ) {
-    if (objectiveId === 3) {
-      // use random value as win to test
-      return { success: true, win: true, token: "token", objective };
-    } else {
-      return { success: true, token: "token", objective };
-    }
-  } else {
-    return { fail: true, objective };
+  try {
+    const res = await makeRequest("http://localhost:3000/try", data);
+    return res;
+  } catch (error) {
+    console.error("ERROR", error);
   }
 }
 
