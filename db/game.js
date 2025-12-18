@@ -33,7 +33,11 @@ async function getGameWithObjectives(id) {
 
   const objectives = await runQuery(objectivesQuery, objectivesParams);
 
-  game.objectives = objectives;
+  game.objectives = {};
+
+  objectives.forEach((o) => {
+    game.objectives[o.id] = o;
+  });
 
   return game;
 }
