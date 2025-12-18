@@ -126,12 +126,12 @@ export default {
     const targetBox = document.createElement("div");
     targetBox.dataset.name = objective.name;
 
-    targetBox.style.left = objective.left * contanerWidth + "px";
-    targetBox.style.top = objective.top * containerHeight + "px";
+    targetBox.style.left = objective.leftbound * contanerWidth + "px";
+    targetBox.style.top = objective.topbound * containerHeight + "px";
     targetBox.style.width =
-      (objective.right - objective.left) * contanerWidth + "px";
+      (objective.rightbound - objective.leftbound) * contanerWidth + "px";
     targetBox.style.height =
-      (objective.bottom - objective.top) * containerHeight + "px";
+      (objective.bottombound - objective.topbound) * containerHeight + "px";
 
     targetBox.classList.add("target-box");
 
