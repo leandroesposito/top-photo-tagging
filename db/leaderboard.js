@@ -1,4 +1,4 @@
-import { runQuery } from "./queries";
+const { runQuery } = require("./queries");
 
 async function getLeaderboard(gameId) {
   const query = "SELECT * FROM leaderboard WHERE game_id=$1 ORDER BY time;";
