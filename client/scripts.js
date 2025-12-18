@@ -64,6 +64,7 @@ function initTimer() {
 async function initLeaderboard() {
   const scores = await api.getLeaderboard(currentGame.id);
   const scoresContainer = document.querySelector(".leaderboard .scores");
+  scoresContainer.innerHTML = "";
   scoresContainer.appendChild(htmlCreator.createScoresDisplay(scores));
 
   leaderboardButton.classList.remove("hidden");
