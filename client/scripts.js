@@ -80,11 +80,7 @@ async function handleObjectiveSubmit(event) {
   const target = event.target;
   const objectiveId = parseInt(target.dataset.id);
 
-  const res = await api.submitTry(
-    currentGame.id,
-    objectiveId,
-    markerRelativePos
-  );
+  const res = await api.submitTry(objectiveId, markerRelativePos);
 
   if (res.success) {
     handleSuccess(res);
