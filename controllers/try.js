@@ -90,7 +90,7 @@ const makeTry = [
       const totalTime = new Date(currentTime - startTime);
       const totalTimeString = totalTime.toISOString().substring(11, 19);
 
-      tokenData.totalTIme = totalTimeString;
+      tokenData.totalTime = totalTimeString;
       return res.json({
         success: true,
         objective,
