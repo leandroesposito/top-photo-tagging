@@ -52,4 +52,5 @@ const getGameWithObjectives = [
 module.exports = {
   getAllGames,
   getGameWithObjectives,
+  gameExists,
 };
