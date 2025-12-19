@@ -31,11 +31,8 @@ async function initGame(gameId) {
   const gameSetupContainer = document.querySelector(".game-setup");
   gameSetupContainer.remove();
 
-  const gameplayContainer = document.querySelector(".game-play");
-  gameplayContainer.classList.remove("hidden");
-
-  const gameContainer = document.querySelector(".game");
-  gameContainer.classList.remove("hidden");
+  showElements(".game-play");
+  showElements(".game");
 
   const body = document.querySelector(".body");
   body.classList.add("playing");
@@ -93,8 +90,7 @@ async function handleObjectiveSubmit(event) {
     handleWin();
   }
 
-  const objectivesDropdown = document.querySelector(".objectives-dropdown");
-  objectivesDropdown.classList.add("hidden");
+  hideElements(".objectives-dropdown");
 }
 
 function handleSuccess(res) {
@@ -120,9 +116,7 @@ function handleFail(objectiveId) {
 }
 
 function handleWin() {
-  const scoreSubmitContainer = document.querySelector(".score-submit");
-  scoreSubmitContainer.classList.remove("hidden");
-
+  showElements(".score-submit");
   clearInterval(timerInterval);
 }
 
@@ -222,13 +216,11 @@ function handleGameHover(event) {
 }
 
 function handleLeaderboardButton() {
-  const leaderboard = document.querySelector(".leaderboard");
-  leaderboard.classList.remove("hidden");
+  showElements(".leaderboard");
 }
 
 function handleLeaderboardCloseButton() {
-  const leaderboard = document.querySelector(".leaderboard");
-  leaderboard.classList.add("hidden");
+  hideElements(".leaderboard");
 }
 
 async function handleScoreSubmit(event) {
@@ -244,8 +236,7 @@ async function handleScoreSubmit(event) {
     handleLeaderboardButton();
   }
 
-  const scoreSubmitContainer = event.target.closest(".score-submit");
-  scoreSubmitContainer.classList.add("hidden");
+  hideElements(".score-submit");
 }
 
 function updateZoom() {
@@ -328,6 +319,18 @@ function drawTarget(objective) {
   );
 
   targetsContainer.appendChild(targetBox);
+}
+
+function showElements(className) {
+  document.querySelectorAll(className).forEach((elem) => {
+    elem.classList.remove("hidden");
+  });
+}
+
+function hideElements(className) {
+  document.querySelectorAll(className).forEach((elem) => {
+    elem.classList.add("hidden");
+  });
 }
 
 const imgtag = document.querySelector(".image-container img");
