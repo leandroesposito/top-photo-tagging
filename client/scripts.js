@@ -3,6 +3,7 @@ import htmlCreator from "./htmlCreator.js";
 
 async function initSite() {
   const games = await api.getAllGames();
+  hideElements(".main-loading");
 
   const gamesContainer = document.querySelector(".games");
   gamesContainer.innerHTML = "";
@@ -23,13 +24,15 @@ function handleGameOptionClick(event) {
 }
 
 async function initGame(gameId) {
+  const gameSetupContainer = document.querySelector(".game-setup");
+  gameSetupContainer.remove();
+
+  showElements(".main-loading");
   currentGame = await api.getGameData(gameId);
+  hideElements(".main-loading");
 
   generateObjectivesDisplay(currentGame.objectives);
   generateObjectivesDropdown(currentGame.objectives);
-
-  const gameSetupContainer = document.querySelector(".game-setup");
-  gameSetupContainer.remove();
 
   showElements(".game-play");
   showElements(".game");
@@ -75,6 +78,8 @@ function generateObjectivesDisplay(objectives) {
 }
 
 async function handleObjectiveSubmit(event) {
+  hideElements(".objectives-dropdown .buttons");
+  showElements(".dropdown-loading");
   const target = event.target;
   const objectiveId = parseInt(target.dataset.id);
 
@@ -134,7 +139,6 @@ function showFlashMessage(message, type) {
 
 function generateObjectivesDropdown(objectives) {
   const objectivesDropdown = document.querySelector(".objectives-dropdown");
-  objectivesDropdown.innerHTML = "";
   objectivesDropdown.appendChild(
     htmlCreator.createObjectivesDropdown(objectives, handleObjectiveSubmit)
   );
@@ -190,6 +194,8 @@ function placeObjectivesDropdown(pos, markerRelativePos) {
       imgtag.clientHeight - pos.y + markerSize / 2 + "px";
   }
 
+  hideElements(".dropdown-loading");
+  showElements(".objectives-dropdown .buttons");
   objectivesDropdown.classList.remove("hidden");
 }
 
