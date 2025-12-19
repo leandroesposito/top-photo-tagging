@@ -53,7 +53,9 @@ export default {
   },
 
   createObjectivesDropdown: function (objectives, clickHandler) {
-    const container = document.createDocumentFragment();
+    const container = document.createElement("div");
+    container.classList.add("buttons");
+
     for (const id in objectives) {
       const objective = objectives[id];
       const objectiveButton = document.createElement("button");
