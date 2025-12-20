@@ -82,15 +82,17 @@ export default {
         div.classList.remove("hidden-message");
       }, 10);
 
-      setTimeout(() => {
-        document.body.addEventListener("click", function dismissFlashMessage() {
-          div.classList.add("hidden-message");
-          setTimeout(() => {
-            div.remove();
-          }, 1000);
-          document.body.removeEventListener("click", dismissFlashMessage);
-        });
-      }, 3000);
+      function dismissFlashMessage() {
+        div.classList.add("hidden-message");
+        setTimeout(() => {
+          div.remove();
+        }, 1000);
+        document.body.removeEventListener("click", dismissFlashMessage);
+      }
+
+      document.body.addEventListener("click", dismissFlashMessage);
+
+      setTimeout(dismissFlashMessage, 3000);
     }
 
     return { element: div, show };
