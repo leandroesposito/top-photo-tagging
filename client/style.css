@@ -67,6 +67,11 @@ button,
   text-align: center;
 }
 
+button:hover,
+.button:hover {
+  background-color: var(--secondary-color);
+}
+
 h1,
 h2,
 h3,
