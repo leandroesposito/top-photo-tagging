@@ -17,7 +17,12 @@ const validateName = () => {
   return body("name")
     .trim()
     .exists({ values: "falsy" })
-    .withMessage("Name can't be empty!");
+    .withMessage("Name can't be empty!")
+    .isLength({
+      min: 0,
+      max: 15,
+    })
+    .withMessage("Name must be shorter than 16 characters");
 };
 
 const getLeaderboard = [
