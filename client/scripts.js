@@ -49,6 +49,7 @@ async function initGame(gameId) {
   const footer = document.querySelector("footer");
   footer.innerHTML = `Picture: ${currentGame.name}, You can find more of this artist <a href="${currentGame.credits}" target="_blank">Here</a>`;
   handleBigScreenClick();
+  scoreSubmitForm.reset();
 }
 
 function initTimer() {
@@ -253,9 +254,16 @@ async function handleScoreSubmit(event) {
   event.preventDefault();
 
   const formData = new FormData(event.target);
-  const time = document.querySelector(".timer").textContent;
+  const name = formData.get("name");
 
-  const res = await api.submitScore(currentGame.id, formData.get("name"), time);
+  if (name.trim() === "") {
+    showFlashMessage("Name field can't be empty", "fail");
+    return;
+  }
+  const submitButton = event.target.querySelector("button");
+  submitButton.disabled = true;
+
+  const res = await api.submitScore(currentGame.id, formData.get("name"));
 
   if (res.success) {
     await initLeaderboard();

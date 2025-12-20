@@ -72,6 +72,12 @@ button:hover,
   background-color: var(--secondary-color);
 }
 
+button:disabled,
+.button:disabled {
+  background-color: var(--surface-4);
+  color: white;
+}
+
 h1,
 h2,
 h3,
