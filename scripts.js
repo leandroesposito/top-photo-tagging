@@ -48,6 +48,7 @@ async function initGame(gameId) {
 
   const footer = document.querySelector("footer");
   footer.innerHTML = `Picture: ${currentGame.name}, You can find more of this artist <a href="${currentGame.credits}" target="_blank">Here</a>`;
+  handleBigScreenClick();
 }
 
 function initTimer() {
@@ -160,7 +161,7 @@ function handleGameClick(event) {
 
   const pos = { x: event.offsetX, y: event.offsetY };
   placeMarker(pos);
-  placeObjectivesDropdown(pos, markerRelativePos);
+  placeObjectivesDropdown(event);
 }
 
 function placeMarker(pos) {
@@ -172,11 +173,25 @@ function placeMarker(pos) {
   marker.classList.remove("hidden");
 }
 
-function placeObjectivesDropdown(pos, markerRelativePos) {
+function placeObjectivesDropdown(event) {
   const objectivesDropdown = document.querySelector(".objectives-dropdown");
   const markerSize = imgtag.offsetWidth * 0.02;
 
-  if (markerRelativePos.x < 0.5) {
+  const imageContainerSize = imageContainer.getBoundingClientRect();
+
+  const fixedCoords = {
+    x: event.clientX - imageContainerSize.left,
+    y: event.clientY - imageContainerSize.top,
+  };
+
+  const realtivePos = {
+    x: fixedCoords.x / imageContainer.clientWidth,
+    y: fixedCoords.y / imageContainer.clientHeight,
+  };
+
+  const pos = { x: event.offsetX, y: event.offsetY };
+
+  if (realtivePos.x < 0.5) {
     objectivesDropdown.style.left = pos.x + markerSize / 2 + "px";
     objectivesDropdown.style.right = null;
   } else {
@@ -185,7 +200,7 @@ function placeObjectivesDropdown(pos, markerRelativePos) {
       imgtag.clientWidth - pos.x + markerSize / 2 + "px";
   }
 
-  if (markerRelativePos.y < 0.5) {
+  if (realtivePos.y < 0.5) {
     objectivesDropdown.style.top = pos.y + markerSize / 2 + "px";
     objectivesDropdown.style.bottom = null;
   } else {
@@ -200,6 +215,11 @@ function placeObjectivesDropdown(pos, markerRelativePos) {
 }
 
 function handleGameHover(event) {
+  const followMouse = document.querySelector(".follow-mouse").checked;
+  if (!followMouse) {
+    return;
+  }
+
   const target = event.target;
   if (target !== imgtag) return;
 
@@ -294,11 +314,30 @@ function handleGameWheel(event) {
 }
 
 function handleObjectivesMouseEnter() {
-  objective.classList.toggle("bottom");
+  if (objectivesContainer.classList.contains("inside")) {
+    objectivesContainer.classList.toggle("bottom");
+    configContainer.classList.toggle("bottom");
+  }
 }
 
 function handleImgTagOnload() {
-  imageContainer.scrollIntoView(false);
+  document.querySelector(".game").scrollIntoView(false);
+}
+
+function handleBigScreenClick() {
+  if (!bigScreenControll.checked) {
+    objectivesContainer.classList.remove("inside");
+    imageContainer.classList.remove("full-screen");
+    configContainer.classList.remove("bottom");
+  } else {
+    imageContainer.classList.add("full-screen");
+    objectivesContainer.classList.add("inside");
+    if (objectivesContainer.classList.contains("bottom")) {
+      configContainer.classList.remove("bottom");
+    } else {
+      configContainer.classList.add("bottom");
+    }
+  }
 }
 
 function showFound() {
@@ -352,9 +391,11 @@ const leaderboardCloseButton = document.querySelector(
   ".leaderboard .close-button"
 );
 const scoreSubmitForm = document.querySelector(".score-submit form");
-const objective = document.querySelector(".objectives");
+const objectivesContainer = document.querySelector(".objectives");
 const zoomInButton = document.querySelector(".zoom-in");
 const zoomOutButton = document.querySelector(".zoom-out");
+const bigScreenControll = document.querySelector(".big-screen");
+const configContainer = document.querySelector(".config");
 
 imageContainer.addEventListener("click", handleGameClick);
 
@@ -368,11 +409,13 @@ leaderboardCloseButton.addEventListener("click", handleLeaderboardCloseButton);
 
 scoreSubmitForm.addEventListener("submit", handleScoreSubmit);
 
-objective.addEventListener("mouseenter", handleObjectivesMouseEnter);
+objectivesContainer.addEventListener("mouseenter", handleObjectivesMouseEnter);
 
 imgtag.addEventListener("load", handleImgTagOnload);
 
 zoomInButton.addEventListener("click", scaleIn);
 zoomOutButton.addEventListener("click", scaleOut);
+
+bigScreenControll.addEventListener("click", handleBigScreenClick);
 
 await initSite();
