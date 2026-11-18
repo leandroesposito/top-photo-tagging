@@ -15,6 +15,15 @@ This project ties together everything learned so far:
 ## Live Demo
 
 [Play the Game](https://leandroesposito.github.io/top-photo-tagging/)
+\*The free servers may take a few seconds to respond on first request.
+
+## Screenshots
+
+![Home](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/1_home.png)
+![Game](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/2_game.png)
+![Gameplay](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/3_gameplay.png)
+![Found](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/4_found.png)
+![Leaderboard](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/5_leaderboard.png)
 
 ## Game Mechanics
 
@@ -36,7 +45,7 @@ Since the image can be zoomed, coordinates are normalized:
 // Frontend - Convert click position to proportional coordinates (0-1 scale)
 markerRelativePos = {
   x: event.offsetX / imgtag.clientWidth,
-  y: event.offsetY / imgtag.clientHeight
+  y: event.offsetY / imgtag.clientHeight,
 };
 
 // Backend - Validate against stored proportional boundaries
@@ -64,17 +73,18 @@ Store game state in a **signed JWT token** on the server:
 // Server - Create token when game starts
 function initToken(game) {
   const tokenData = {
-    startTime: new Date(),           // Server timestamp
+    startTime: new Date(), // Server timestamp
     gameId: game.id,
-    objectives: {                    // Track which found
-      1: false,  // Character 1 not found
-      2: false,  // Character 2 not found
-      3: false   // Character 3 not found
-    }
+    objectives: {
+      // Track which found
+      1: false, // Character 1 not found
+      2: false, // Character 2 not found
+      3: false, // Character 3 not found
+    },
   };
-  
+
   const token = jwt.sign(tokenData, process.env.JWT_SECRET);
-  return token;  // Client cannot modify this!
+  return token; // Client cannot modify this!
 }
 ```
 
@@ -101,8 +111,8 @@ function initToken(game) {
 
 ```javascript
 // Client attempts to cheat - but CANNOT modify token!
-const hackedToken = "eyJhbGciOiJIUzI1NiIs..."  // Modified payload
-jwt.verify(hackedToken, SECRET)  // ❌ Invalid signature! Server rejects it
+const hackedToken = "eyJhbGciOiJIUzI1NiIs..."; // Modified payload
+jwt.verify(hackedToken, SECRET); // ❌ Invalid signature! Server rejects it
 ```
 
 ## Project Structure
@@ -170,17 +180,18 @@ CREATE TABLE leaderboard (
 
 ### Public Routes
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| `GET` | `/games` | List all available games |
-| `GET` | `/games/:gameId` | Get game data + new JWT token |
-| `GET` | `/leaderboard/:gameId` | Get leaderboard scores |
-| `POST` | `/leaderboard/:gameId` | Submit final score (requires token) |
-| `POST` | `/try` | Validate character attempt (requires token) |
+| Method | Endpoint               | Purpose                                     |
+| ------ | ---------------------- | ------------------------------------------- |
+| `GET`  | `/games`               | List all available games                    |
+| `GET`  | `/games/:gameId`       | Get game data + new JWT token               |
+| `GET`  | `/leaderboard/:gameId` | Get leaderboard scores                      |
+| `POST` | `/leaderboard/:gameId` | Submit final score (requires token)         |
+| `POST` | `/try`                 | Validate character attempt (requires token) |
 
 ### Request/Response Examples
 
 #### Start Game
+
 ```http
 GET /games/1
 
@@ -198,6 +209,7 @@ Response:
 ```
 
 #### Submit Attempt
+
 ```http
 POST /try
 Content-Type: application/json
@@ -236,6 +248,7 @@ Response (win - all found):
 ```
 
 #### Submit Score
+
 ```http
 POST /leaderboard/1
 Content-Type: application/json
@@ -255,13 +268,13 @@ Response:
 
 ### Interactive Gameplay
 
-| Feature | Implementation |
-|---------|----------------|
-| **Zoom** | Mouse wheel or +/- buttons (10% increments up to 2x) |
-| **Follow Mouse** | Viewport auto-scrolls to follow cursor |
-| **Big Screen Mode** | Expands image container for better visibility |
-| **Visual Feedback** | Character boxes appear on successful finds |
-| **Marker** | Circular indicator at click position |
+| Feature             | Implementation                                       |
+| ------------------- | ---------------------------------------------------- |
+| **Zoom**            | Mouse wheel or +/- buttons (10% increments up to 2x) |
+| **Follow Mouse**    | Viewport auto-scrolls to follow cursor               |
+| **Big Screen Mode** | Expands image container for better visibility        |
+| **Visual Feedback** | Character boxes appear on successful finds           |
+| **Marker**          | Circular indicator at click position                 |
 
 ### Coordinate Conversion
 
@@ -271,9 +284,9 @@ function handleGameClick(event) {
   // Convert pixel click position to proportional (0-1 scale)
   const proportionalPos = {
     x: event.offsetX / imgtag.clientWidth,
-    y: event.offsetY / imgtag.clientHeight
+    y: event.offsetY / imgtag.clientHeight,
   };
-  
+
   api.submitTry(objectiveId, proportionalPos);
 }
 ```
@@ -284,7 +297,7 @@ function handleGameClick(event) {
 function updateZoom() {
   const naturalWidth = imgtag.naturalWidth;
   const naturalHeight = imgtag.naturalHeight;
-  
+
   // Apply scale factor (scaleFactor = 1 = original size, 2 = double)
   imgtag.style.width = naturalWidth * scaleFactor + "px";
   imgtag.style.height = naturalHeight * scaleFactor + "px";
@@ -363,17 +376,17 @@ async function makeRequest(endpoint, data) {
   };
 
   if (data) {
-    data.token = localStorage.getItem("token");  // Auto-add token
+    data.token = localStorage.getItem("token"); // Auto-add token
     options.body = JSON.stringify(data);
   }
 
   const response = await fetch(endpoint, options);
   const json = await response.json();
-  
+
   if (json.token) {
-    localStorage.setItem("token", json.token);  // Update stored token
+    localStorage.setItem("token", json.token); // Update stored token
   }
-  
+
   return json;
 }
 ```
@@ -381,48 +394,56 @@ async function makeRequest(endpoint, data) {
 ## UI Features
 
 ### Zoom Controls
+
 - **Mouse wheel** - Scroll up/down to zoom in/out
 - **+/- buttons** - Increment/decrement zoom by 10%
 - **Zoom range** - From original size up to 200%
 
 ### Follow Mouse Mode
+
 - Checkbox enables/disables auto-scroll
 - When enabled, viewport follows cursor position
 - Useful for exploring large images
 
 ### Big Screen Mode
+
 - Expands image container to full height
 - Moves objectives inside the viewport
 - Optimized for desktop play
 
 ### Visual Feedback
-| Element | Indicates |
-|---------|-----------|
-| **Pulsing marker** | Click position |
+
+| Element               | Indicates                    |
+| --------------------- | ---------------------------- |
+| **Pulsing marker**    | Click position               |
 | **Green outline box** | Successfully found character |
-| **Green card** | Found character in sidebar |
-| **Flash message** | Success/failure feedback |
-| **Leaderboard** | Top scores with times |
+| **Green card**        | Found character in sidebar   |
+| **Flash message**     | Success/failure feedback     |
+| **Leaderboard**       | Top scores with times        |
 
 ## Key Takeaways
 
 ### Security (JWT)
+
 - **Server-side time** - Start time stored in signed token, not client
 - **Tamper-proof** - Token signature verification prevents modification
 - **Stateless** - No session storage needed on server
 - **Token rotation** - New token issued after each successful find
 
 ### Coordinate System
+
 - **Proportional scaling** - Coordinates stored as 0-1 values
 - **Zoom-agnostic** - Works regardless of zoom level
 - **Precision** - REAL type in database for floating point accuracy
 
 ### Full Stack Integration
+
 - **Single token** - Carries all game state throughout session
 - **Atomic validation** - Each attempt independently verified
 - **Leaderboard** - Only final tokens with totalTime can submit
 
 ### User Experience
+
 - **Instant feedback** - Visual indicator for each find
 - **No cheating** - Timer is decorative; actual time from server
 - **Persistent state** - Page refresh loses token (starts new game)
@@ -452,6 +473,7 @@ python -m http.server 8080
 ## Database Seeding
 
 The `populate.js` script contains:
+
 - 6 game images with artist credits
 - 40+ characters with precise proportional boundaries
 - Sample leaderboard scores for testing
@@ -461,4 +483,3 @@ The `populate.js` script contains:
 - [JWT.io](https://jwt.io/) - JSON Web Token specification
 - [Express.js](https://expressjs.com/) - Backend framework
 - [PostgreSQL](https://www.postgresql.org/) - Database
-
