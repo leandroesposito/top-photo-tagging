@@ -19,11 +19,11 @@ This project ties together everything learned so far:
 
 ## Screenshots
 
-![Home](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/1_home.png)
-![Game](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/2_game.png)
-![Gameplay](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/3_gameplay.png)
-![Found](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/4_found.png)
-![Leaderboard](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/5_leaderboard.png)
+![Home](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/1_home.jpg)
+![Game](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/2_game.jpg)
+![Gameplay](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/3_gameplay.jpg)
+![Found](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/4_found.jpg)
+![Leaderboard](https://github.com/leandroesposito/top-photo-tagging/blob/main/screenshots/5_leaderboard.jpg)
 
 ## Game Mechanics
 
